@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tourAgency.tour_agency.mapper.UserMapper;
 import tourAgency.tour_agency.model.dto.user.UserDto;
 import tourAgency.tour_agency.model.dto.user.UserLoginRequest;
+import tourAgency.tour_agency.model.dto.user.UserRegisterRequest;
 import tourAgency.tour_agency.model.entity.user.User;
 import tourAgency.tour_agency.repository.user.UserRepository;
 
@@ -36,5 +37,18 @@ public class UserService {
         }
 
         return UserMapper.toUserDto(optionalUser.get());
+    }
+
+    public UserDto register(UserRegisterRequest request) {
+
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        User user = UserMapper.toUserEntity(request);
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        return UserMapper.toUserDto(userRepository.save(user));
     }
 }
