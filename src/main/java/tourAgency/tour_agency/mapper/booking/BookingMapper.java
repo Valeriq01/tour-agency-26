@@ -1,4 +1,4 @@
-package tourAgency.tour_agency.mapper;
+package tourAgency.tour_agency.mapper.booking;
 
 import lombok.NoArgsConstructor;
 import tourAgency.tour_agency.model.dto.booking.BookingDto;
@@ -54,6 +54,41 @@ public class BookingMapper {
                 .status(BookingStatus.PENDING)
                 .price(price)
                 .notes(dto.getNotes())
+                .build();
+    }
+
+    public static Booking toEntity(BookingEditDto dto, Booking booking) {
+
+        if (dto == null || booking == null) {
+            return booking;
+        }
+
+        booking.setPersons(dto.getPersons());
+        booking.setStartDate(dto.getStartDate());
+        booking.setEndDate(dto.getEndDate());
+        booking.setNotes(dto.getNotes());
+
+        BigDecimal price = booking.getDestination()
+                .getPrice()
+                .multiply(BigDecimal.valueOf(dto.getPersons()));
+
+        booking.setPrice(price);
+
+        return booking;
+    }
+
+    public static BookingEditDto toEditDto(BookingDto booking) {
+
+        if (booking == null) {
+            return null;
+        }
+
+        return BookingEditDto.builder()
+                .id(booking.getId())
+                .persons(booking.getPersons())
+                .startDate(booking.getStartDate())
+                .endDate(booking.getEndDate())
+                .notes(booking.getNotes())
                 .build();
     }
 }

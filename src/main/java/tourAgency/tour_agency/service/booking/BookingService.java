@@ -2,7 +2,7 @@ package tourAgency.tour_agency.service.booking;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tourAgency.tour_agency.mapper.BookingMapper;
+import tourAgency.tour_agency.mapper.booking.BookingMapper;
 import tourAgency.tour_agency.model.dto.booking.BookingDto;
 import tourAgency.tour_agency.model.dto.booking.BookingEditDto;
 import tourAgency.tour_agency.model.dto.booking.BookingRequestDto;
@@ -86,6 +86,18 @@ public class BookingService {
 
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        return BookingMapper.toDto(booking);
+    }
+
+    public BookingDto editBooking(UUID id, BookingEditDto dto) {
+
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        BookingMapper.toEntity(dto, booking);
+
+        bookingRepository.save(booking);
 
         return BookingMapper.toDto(booking);
     }
