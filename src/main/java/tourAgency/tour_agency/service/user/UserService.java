@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import tourAgency.tour_agency.mapper.UserMapper;
+import tourAgency.tour_agency.mapper.user.UserMapper;
 import tourAgency.tour_agency.model.dto.user.EditUserRequest;
 import tourAgency.tour_agency.model.dto.user.UserDto;
 import tourAgency.tour_agency.model.dto.user.UserLoginRequest;

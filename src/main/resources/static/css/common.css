@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    width: 100%;
+    padding: 15px 40px;
+
+    background: linear-gradient(90deg, #2b2a57, #3a2f6b);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+}
+
+.nav {
+    margin-left: auto;
+    display: flex;
+    gap: 15px;
+}
+
+.button {
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.button.login {
+    background: #FFD6A5;
+    color: #2b2a57;
+}
+
+.button.login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 214, 165, 0.4);
+}
+
+.button.register {
+    background: transparent;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+}
+
+.button.register:hover {
+    background: #ffffff;
+    color: #2b2a57;
+    transform: translateY(-2px);
+}
+
+.footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 15px;
+
+    background: linear-gradient(90deg, #2b2a57, #3a2f6b);
+    color: #ffffff;
+
+    font-size: 14px;
+}

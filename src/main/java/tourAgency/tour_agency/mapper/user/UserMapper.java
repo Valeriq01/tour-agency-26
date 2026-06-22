@@ -1,4 +1,4 @@
-package tourAgency.tour_agency.mapper;
+package tourAgency.tour_agency.mapper.user;
 
 import lombok.NoArgsConstructor;
 import tourAgency.tour_agency.model.dto.user.EditUserRequest;
