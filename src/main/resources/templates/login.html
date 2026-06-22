@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/form-login.css">
+
+    <title>Login</title>
+</head>
+
+<body>
+
+<main>
+    <section class="section full-height">
+
+        <form class="auth-form" th:action="@{/login}" th:object="${userLoginRequest}" th:method="post">
+
+            <h3>Welcome Back</h3>
+
+            <label>Username</label>
+            <input type="text" placeholder="Enter username" th:field="*{username}" required>
+            <p class="alert-warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+
+            <label>Password</label>
+            <input type="password" placeholder="Enter password" th:field="*{password}" required>
+            <p class="alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+
+            <button type="submit">Log In</button>
+
+            <p>
+                Don't have an account?
+                <a href="/register">Register</a>
+            </p>
+
+        </form>
+
+    </section>
+</main>
+
+</body>
+</html>

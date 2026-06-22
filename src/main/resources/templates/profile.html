@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Travel Agency</div>
+
+    <nav class="nav">
+        <a href="/home">Home</a>
+        <a href="/destinations">Destinations</a>
+        <a href="/my-bookings">My Bookings</a>
+    </nav>
+
+    <div class="profile-menu">
+        <a th:href="@{/profile/{id}(id=${user.id})}" class="active">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+</header>
+
+<section class="profile-hero">
+
+    <div class="profile-info">
+        <span class="profile-label">User Profile</span>
+
+        <h1 th:text="${user.getFirstName()}">First Name</h1>
+
+        <p th:text="${user.getEmail()}">Email</p>
+
+        <span class="role admin" th:text="${user.getRole()}">Administrator</span>
+    </div>
+
+    <a th:href="@{/profile/edit-profile/{id}(id=${user.id})}" class="edit-btn">Edit Profile</a>
+
+</section>
+
+<main class="profile-container">
+
+    <form class="card"
+          th:action="@{/profile/{id}(id=${user.id})}"
+          th:object="${user}"
+          method="post">
+
+        <input type="hidden" name="_method" value="put">
+
+        <h2>Account Information</h2>
+
+        <div class="row">
+            <span>Username</span>
+            <b th:text="*{username}">username</b>
+        </div>
+
+        <div class="row">
+            <span>First Name</span>
+            <b th:text="*{firstName}">First Name</b>
+        </div>
+
+        <div class="row">
+            <span>Last Name</span>
+            <b th:text="*{lastName}">Last Name</b>
+        </div>
+
+        <div class="row">
+            <span>Email</span>
+            <b th:text="*{email}">email@example.com</b>
+        </div>
+
+    </form>
+
+    <div class="card">
+
+        <h2>My Bookings</h2>
+
+        <div th:if="${#lists.isEmpty(bookings)}">
+            <p>No bookings yet.</p>
+        </div>
+
+        <div th:each="booking : ${bookings}" class="booking-summary">
+
+            <div>
+                <h3 th:text="${booking.destinationName}">Destination</h3>
+                <p th:text="${booking.startDate}">Start Date</p>
+                <p th:text="${booking.endDate}">End Date</p>
+            </div>
+
+            <span class="price" th:text="${booking.price + ' €'}">Price</span>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

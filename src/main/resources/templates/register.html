@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="/css/common.css">
+  <link rel="stylesheet" type="text/css" href="/css/form-register.css">
+
+  <title>Register</title>
+</head>
+
+<body>
+
+<main>
+  <section class="section full-height">
+
+    <form class="form auth-form" th:action="@{/register}" th:object="${userRegisterRequest}" th:method="post">
+
+      <h3>Create Account</h3>
+
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter username" th:field="*{username}" required>
+      <p class="alert-warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" placeholder="Enter first name" th:field="*{firstName}" required>
+      <p class="alert-warning" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" placeholder="Enter last name" th:field="*{lastName}" required>
+      <p class="alert-warning" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter email" th:field="*{email}" required>
+      <p class="alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password" th:field="*{password}" required>
+      <p class="alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+
+      <button type="submit">Register</button>
+
+      <p class="alert-warning" th:if="${error}" th:text="${error}"></p>
+
+    </form>
+
+  </section>
+</main>
+
+</body>
+</html>

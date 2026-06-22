@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/edit-profile.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Travel Agency</div>
+
+    <nav class="nav">
+        <a href="/home">Home</a>
+        <a href="/destinations">Destinations</a>
+        <a href="/my-bookings">My Bookings</a>
+    </nav>
+
+    <div class="profile-menu">
+        <a th:href="@{/profile/{id}(id=${user.id})}" class="active">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+</header>
+
+<section class="edit-hero">
+    <h1>Edit Profile</h1>
+    <p>Update your personal information</p>
+</section>
+
+<main class="edit-container">
+
+    <form class="edit-card"
+          th:action="@{/profile/{id}(id=${user.id})}"
+          th:object="${editUserRequest}"
+          method="post">
+
+        <input type="hidden" name="_method" value="put">
+
+        <label>Username</label>
+        <input type="text" th:field="*{username}">
+        <div class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+
+        <label>First Name</label>
+        <input type="text" th:field="*{firstName}">
+        <div class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+
+        <label>Last Name</label>
+        <input type="text" th:field="*{lastName}">
+        <div class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+
+        <label>Email</label>
+        <input type="email" th:field="*{email}">
+        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
+        <button type="submit">Apply Changes</button>
+
+    </form>
+
+</main>
+
+</body>
+</html>
