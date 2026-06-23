@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/destination-details.css">
+
+    <title>Destination Details</title>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Travel Agency</div>
+
+    <nav class="nav">
+        <a href="/home">Home</a>
+        <a href="/destinations">Destinations</a>
+        <a href="/my-bookings">My Bookings</a>
+    </nav>
+
+    <div class="profile-menu">
+        <a th:href="@{/profile/{id}(id=${user.id})}">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+</header>
+
+<main>
+
+    <section class="detail-hero">
+        <img th:src="${destination.imageUrl}" alt="destination">
+
+        <div class="hero-overlay">
+            <h1 th:text="${destination.name}">Paris</h1>
+            <p th:text="${destination.country}">France</p>
+        </div>
+    </section>
+
+    <section class="quick-info">
+        <div th:text="'✈ From Sofia'"></div>
+        <div>🏨 4★ Hotel</div>
+        <div>📅 Fixed Departure</div>
+        <div>⭐ 4.8 Rating</div>
+    </section>
+
+    <section class="detail-layout">
+
+        <div class="left">
+
+            <div class="info-stack">
+
+                <div class="card">
+                    <h2>Overview</h2>
+                    <p th:text="${destination.description}">
+                        Description goes here...
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h2>Top Experiences</h2>
+
+                    <div class="tags">
+                        <span th:if="${destination.experiences != null}" th:each="exp : ${#strings.arraySplit(destination.experiences, ',')}" th:text="${exp}"></span>
+                    </div>
+                </div>
+
+                <div class="card">
+
+                    <h2>Trip Details</h2>
+
+                    <div class="schedule">
+
+                        <div class="schedule-item">
+                            <span class="label">Country</span>
+                            <span class="value" th:text="${destination.country}"></span>
+                        </div>
+
+                        <div class="schedule-item">
+                            <span class="label">Days</span>
+                            <span class="value" th:text="${destination.days + ' Days'}"></span>
+                        </div>
+
+                        <div class="schedule-item">
+                            <span class="label">Price</span>
+                            <span class="value" th:text="${'€' + destination.price}"></span>
+                        </div>
+
+                        <div class="schedule-item">
+                            <span class="label">Available spots</span>
+                            <span class="value" th:text="${destination.availableSpots}"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="right">
+
+            <div class="booking-card">
+
+                <div class="price" th:text="${'€' + destination.price}">
+                    €799
+                </div>
+
+                <p>per person</p>
+
+                <a th:href="@{/booking/{id}(id=${destination.id})}" class="book-btn">
+                    Book Now
+                </a>
+
+                <div class="benefits">
+                    <p>✔ Free cancellation</p>
+                    <p>✔ Instant confirmation</p>
+                    <p>✔ No hidden fees</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

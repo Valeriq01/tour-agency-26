@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/destination.css">
+
+    <title>Destinations - Travel Agency</title>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        Travel Agency
+    </div>
+
+    <nav class="nav">
+        <a href="/home">Home</a>
+        <a href="/destinations" class="active">Destinations</a>
+        <a href="/my-bookings">My Bookings</a>
+    </nav>
+
+    <div class="profile-menu">
+        <a th:href="@{/profile/{id}(id=${user.id})}">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+</header>
+
+<main>
+
+    <section class="hero" style="height: 250px;">
+        <div class="hero-content">
+            <h1>All Destinations</h1>
+            <p>Choose your next adventure</p>
+        </div>
+    </section>
+
+    <section class="destinations-section">
+
+        <div class="destinations-grid">
+
+            <div class="destination-card"
+                 th:each="destination : ${destinations}">
+
+                <div class="image-container">
+                    <img th:src="${destination.imageUrl}">
+
+                    <div class="trip-duration">
+                        <span th:text="${destination.days + ' Days'}">3 Days</span>
+                    </div>
+                </div>
+
+                <div class="card-content">
+                    <h3 th:text="${destination.name}">Paris</h3>
+                    <p th:text="${destination.country}">France</p>
+
+                    <span class="price"
+                          th:text="${'From €' + destination.price}">
+          From €799
+        </span>
+                    <a th:href="@{/destinations/{id}(id=${destination.id})}" class="details-btn">View Details</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    © 2026 Travel Explorer. All rights reserved.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,279 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: #f5f7fb;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px 60px;
+
+    background: #2b2a57;
+    color: white;
+
+    box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.nav {
+    display: flex;
+    gap: 30px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: white;
+    transition: .3s;
+}
+
+.nav a:hover {
+    color: #ffb3c6;
+}
+
+.profile-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-menu a {
+    text-decoration: none;
+    color: white;
+}
+
+.profile-menu a:hover {
+    color: #ffb3c6;
+}
+
+.nav a {
+    position: relative;
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+}
+
+.nav a:hover {
+    color: #ffb3c6;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px 60px;
+
+    background: #2b2a57;
+    color: white;
+
+    box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.nav {
+    display: flex;
+    gap: 30px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: white;
+    transition: .3s;
+}
+
+.nav a:hover {
+    color: #ffb3c6;
+}
+
+.profile-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-menu a {
+    text-decoration: none;
+    color: white;
+}
+
+.profile-menu a:hover {
+    color: #ffb3c6;
+}
+
+.nav a {
+    position: relative;
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+}
+
+.detail-hero {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+    background: #43427c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.detail-hero img {
+    height: 500px;
+    width: 800px
+}
+
+.hero-overlay {
+    position: absolute;
+    bottom: 330px;
+    left: 400px;
+    color: white;
+    background: rgba(85, 85, 85, 0.85);
+    padding: 15px 20px;
+    border-radius: 12px;
+}
+
+.hero-overlay h1 {
+    font-size: 42px;
+    margin: 0;
+}
+
+.quick-info {
+    display: flex;
+    justify-content: space-around;
+    padding: 18px;
+    background: white;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.detail-layout {
+    display: flex;
+    gap: 40px;
+    padding: 40px;
+}
+
+.left {
+    flex: 2;
+}
+
+.right {
+    flex: 1;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.tags span {
+    background: #eef3ff;
+    color: #1e88e5;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.schedule-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #f7f9ff;
+    border-radius: 10px;
+}
+
+.label {
+    color: #666;
+    font-size: 13px;
+}
+
+.value {
+    font-weight: 600;
+}
+
+.booking-card {
+    position: sticky;
+    top: 20px;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.price {
+    font-size: 36px;
+    font-weight: bold;
+    color: #1e88e5c4;
+    margin: 10px 0;
+}
+
+.book-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    padding-left: 0px;
+
+    text-align: center;
+    text-decoration: none;
+
+    border-radius: 12px;
+
+    background: #1e88e5c4;
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    margin-top: 15px;
+
+    transition: 0.3s;
+}
+
+.book-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(106, 17, 203, 0.3);
+}
+
+.benefits {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+}
