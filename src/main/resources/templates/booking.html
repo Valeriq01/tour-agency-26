@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking</title>
+
+    <link rel="stylesheet" href="/css/booking.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo">Travel Agency</div>
+
+    <nav class="nav">
+        <a href="/home">Home</a>
+        <a href="/destinations">Destinations</a>
+        <a href="/my-bookings">My Bookings</a>
+    </nav>
+
+    <div class="profile-menu">
+        <a th:href="@{/profile/{id}(id=${user.id})}">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+</header>
+
+<div class="booking-container">
+
+    <h1>Complete Your Booking</h1>
+
+    <p th:text="${destination.name + ' • ' + destination.country}">
+        Destination info
+    </p>
+
+    <form th:action="@{/booking/save}"
+          th:object="${bookingRequestDto}"
+          method="post"
+          class="booking-form">
+
+        <input type="hidden" th:field="*{destinationId}">
+
+        <label>Full Name</label>
+        <input type="text"
+               name="fullName"
+               th:value="${user.firstName + ' ' + user.lastName}"
+               readonly>
+
+        <label>Email</label>
+        <input type="email"
+               name="email"
+               th:value="${user.email}"
+               readonly>
+
+        <label>Number of Persons</label>
+        <input type="number"
+               th:field="*{persons}"
+               min="1">
+
+        <p class="error" th:if="${#fields.hasErrors('persons')}"
+           th:errors="*{persons}"></p>
+
+        <button type="submit"
+                formaction="/booking/preview"
+                formmethod="post">
+            Update Price
+        </button>
+
+        <label>Total Price</label>
+        <div class="price-box">
+            <span th:text="${totalPrice}">0</span> €
+        </div>
+
+        <label>Start Date</label>
+        <input type="date"
+               th:field="*{startDate}">
+
+        <p class="error" th:if="${#fields.hasErrors('startDate')}"
+           th:errors="*{startDate}"></p>
+
+        <label>End Date</label>
+        <input type="date"
+               th:field="*{endDate}">
+
+        <p class="error" th:if="${#fields.hasErrors('endDate')}"
+           th:errors="*{endDate}"></p>
+
+        <label>Notes (optional)</label>
+        <textarea th:field="*{notes}"
+                  placeholder="Any special requests..."></textarea>
+
+        <button type="submit">Confirm Booking</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

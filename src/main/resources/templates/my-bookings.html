@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/my-bookings.css">
+
+    <title>My Bookings - Travel Agency</title>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Travel Agency</div>
+
+    <nav class="nav">
+        <a href="/home">Home</a>
+        <a href="/destinations">Destinations</a>
+        <a href="/my-bookings" class="active">My Bookings</a>
+    </nav>
+
+    <div class="profile-menu">
+        <a th:href="@{/profile/{id}(id=${user.id})}">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+</header>
+
+<main>
+
+    <section class="hero" style="height: 250px;">
+        <div class="hero-content">
+            <h1>My Bookings</h1>
+            <p>All your trips in one place</p>
+        </div>
+    </section>
+
+    <section class="bookings-section">
+
+        <h2 th:text="${user.role.name() == 'ADMIN' ? 'All Bookings' : 'My Bookings'}"></h2>
+
+        <div th:if="${#lists.isEmpty(bookings)}" class="no-bookings">
+            Нямате резервации
+        </div>
+
+        <div th:if="${!#lists.isEmpty(bookings)}" class="bookings-grid">
+
+            <div class="booking-card" th:each="booking : ${bookings}">
+
+                <div class="booking-image">
+                    <img th:src="${'/image/' + booking.destinationName.toLowerCase() + '.jpg'}">
+
+                    <div class="status"
+                         th:classappend="${' ' + booking.status.toString().toLowerCase()}"
+                         th:text="${booking.status}">
+                    </div>
+                </div>
+
+                <div class="booking-content">
+
+                    <div class="top">
+                        <h3 th:text="${booking.destinationName}"></h3>
+                        <span class="price" th:text="${'€' + booking.price}"></span>
+                    </div>
+
+                    <p class="country" th:text="${booking.country}"></p>
+
+                    <div class="info">
+                        <div th:text="${booking.startDate}"></div>
+                        <div th:text="${booking.endDate}"></div>
+                        <div th:text="${booking.persons + ' Travelers'}"></div>
+                    </div>
+
+                    <div class="actions">
+
+                        <a class="details"
+                           th:href="@{/destinations/details/{id}(id=${booking.destinationId})}">
+                            View</a>
+
+                        <a th:href="@{/booking/edit/{id}(id=${booking.id})}"
+                           class="edit-btn">
+                            Edit
+                        </a>
+
+                        <div th:if="${user.role.name() == 'ADMIN'}" class="admin-actions">
+
+                            <form th:action="@{/booking/approve/{id}(id=${booking.id})}"
+                                  method="post">
+                                <button class="approve-btn" type="submit">Approve</button>
+                            </form>
+
+                            <form th:action="@{/booking/{id}(id=${booking.id})}"
+                                  method="post">
+                                <input type="hidden" name="_method" value="delete">
+                                <button class="cancel-btn" type="submit">Cancel</button>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    © 2026 Travel Explorer. All rights reserved.
+</footer>
+
+</body>
+</html>

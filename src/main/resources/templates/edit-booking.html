@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Booking</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/edit-booking.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">Travel Agency</div>
+
+  <nav class="nav">
+    <a href="/home">Home</a>
+    <a href="/destinations">Destinations</a>
+    <a href="/my-bookings">My Bookings</a>
+  </nav>
+
+  <div class="profile-menu">
+    <a th:href="@{/profile/{id}(id=${user.id})}">Profile</a>
+    <a href="/logout">Logout</a>
+  </div>
+</header>
+
+<section class="edit-hero">
+  <h1>Edit Booking</h1>
+  <p>Update your reservation</p>
+</section>
+
+<main class="edit-container">
+
+  <form class="edit-card"
+        th:action="@{/booking/edit/{id}(id=${bookingEditDto.id})}"
+        th:object="${bookingEditDto}"
+        method="post">
+
+    <input type="hidden" th:field="*{id}">
+
+    <label>Persons</label>
+    <input type="number" th:field="*{persons}">
+    <div class="error"
+         th:if="${#fields.hasErrors('persons')}"
+         th:errors="*{persons}">
+    </div>
+
+    <label>Start Date</label>
+    <input type="date" th:field="*{startDate}">
+    <div class="error"
+         th:if="${#fields.hasErrors('startDate')}"
+         th:errors="*{startDate}">
+    </div>
+
+    <label>End Date</label>
+    <input type="date" th:field="*{endDate}">
+    <div class="error"
+         th:if="${#fields.hasErrors('endDate')}"
+         th:errors="*{endDate}">
+    </div>
+
+    <label>Notes</label>
+    <textarea th:field="*{notes}"></textarea>
+    <div class="error"
+         th:if="${#fields.hasErrors('notes')}"
+         th:errors="*{notes}">
+    </div>
+
+    <button type="submit">Update Booking</button>
+
+  </form>
+
+</main>
+
+</body>
+</html>
