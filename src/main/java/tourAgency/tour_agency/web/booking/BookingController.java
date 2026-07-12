@@ -1,6 +1,6 @@
 package tourAgency.tour_agency.web.booking;
-
-import jakarta.servlet.http.HttpSession;
+import org.springframework.security.core.Authentication;
+import tourAgency.tour_agency.security.ApplicationUserDetails;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -36,16 +36,11 @@ public class BookingController {
     }
 
     @GetMapping("/booking/{id}")
-    public ModelAndView getBookingPage(@PathVariable UUID id, HttpSession session) {
+    public ModelAndView getBookingPage(@PathVariable UUID id, Authentication authentication) {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            modelAndView.setViewName("redirect:/login");
-            return modelAndView;
-        }
-
+        UUID userId = getCurrentUserId(authentication);
         UserDto user = userService.getById(userId);
         DestinationDto destination = destinationService.getById(id);
 
@@ -64,15 +59,11 @@ public class BookingController {
     @PostMapping("/booking/save")
     public ModelAndView saveBooking(@Valid @ModelAttribute BookingRequestDto bookingDto,
                                     BindingResult bindingResult,
-                                    HttpSession session) {
+                                    Authentication authentication) {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            modelAndView.setViewName("redirect:/login");
-            return modelAndView;
-        }
+        UUID userId = getCurrentUserId(authentication);
 
         if (bookingDto.getStartDate() != null &&
                 bookingDto.getEndDate() != null) {
@@ -116,15 +107,11 @@ public class BookingController {
     }
 
     @GetMapping("/my-bookings")
-    public ModelAndView myBookings(HttpSession session) {
+    public ModelAndView myBookings(Authentication authentication) {
 
         ModelAndView model = new ModelAndView();
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            model.setViewName("redirect:/login");
-            return model;
-        }
+        UUID userId = getCurrentUserId(authentication);
 
         UserDto user = userService.getById(userId);
 
@@ -144,15 +131,11 @@ public class BookingController {
     }
 
     @DeleteMapping("/booking/{id}")
-    public ModelAndView cancel(@PathVariable UUID id, HttpSession session) {
+    public ModelAndView cancel(@PathVariable UUID id, Authentication authentication) {
 
         ModelAndView model = new ModelAndView();
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            model.setViewName("redirect:/login");
-            return model;
-        }
+        UUID userId = getCurrentUserId(authentication);
 
         UserDto user = userService.getById(userId);
 
@@ -168,15 +151,11 @@ public class BookingController {
     }
 
     @PostMapping("/booking/approve/{id}")
-    public ModelAndView approve(@PathVariable UUID id, HttpSession session) {
+    public ModelAndView approve(@PathVariable UUID id, Authentication authentication) {
 
         ModelAndView model = new ModelAndView();
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            model.setViewName("redirect:/login");
-            return model;
-        }
+        UUID userId = getCurrentUserId(authentication);
 
         UserDto user = userService.getById(userId);
 
@@ -193,15 +172,11 @@ public class BookingController {
 
     @PostMapping("/booking/preview")
     public ModelAndView previewBooking(@ModelAttribute BookingRequestDto bookingRequestDto,
-                                       HttpSession session) {
+                                       Authentication authentication) {
 
         ModelAndView model = new ModelAndView();
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            model.setViewName("redirect:/login");
-            return model;
-        }
+        UUID userId = getCurrentUserId(authentication);
 
         UserDto user = userService.getById(userId);
         DestinationDto destination = destinationService.getById(bookingRequestDto.getDestinationId());
@@ -229,16 +204,11 @@ public class BookingController {
 
     @GetMapping("/booking/edit/{id}")
     public ModelAndView editPage(@PathVariable UUID id,
-                                 HttpSession session) {
+                                 Authentication authentication) {
 
         ModelAndView model = new ModelAndView();
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-
-        if (userId == null) {
-            model.setViewName("redirect:/login");
-            return model;
-        }
+        UUID userId = getCurrentUserId(authentication);
 
         UserDto user = userService.getById(userId);
 
@@ -257,15 +227,11 @@ public class BookingController {
             @PathVariable UUID id,
             @Valid @ModelAttribute BookingEditDto bookingEditDto,
             BindingResult bindingResult,
-            HttpSession session) {
+            Authentication authentication) {
 
         ModelAndView model = new ModelAndView();
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            model.setViewName("redirect:/login");
-            return model;
-        }
+        UUID userId = getCurrentUserId(authentication);
 
         if (bookingEditDto.getStartDate() != null &&
                 bookingEditDto.getEndDate() != null) {
@@ -298,5 +264,12 @@ public class BookingController {
 
         model.setViewName("redirect:/my-bookings");
         return model;
+    }
+
+    private UUID getCurrentUserId(Authentication authentication) {
+        ApplicationUserDetails userDetails =
+                (ApplicationUserDetails) authentication.getPrincipal();
+
+        return userDetails.getUser().getId();
     }
 }

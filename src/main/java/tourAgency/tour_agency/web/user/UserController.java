@@ -1,7 +1,5 @@
 package tourAgency.tour_agency.web.user;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -11,7 +9,6 @@ import tourAgency.tour_agency.mapper.user.UserMapper;
 import tourAgency.tour_agency.model.dto.booking.BookingDto;
 import tourAgency.tour_agency.model.dto.user.EditUserRequest;
 import tourAgency.tour_agency.model.dto.user.UserDto;
-import tourAgency.tour_agency.model.dto.user.UserLoginRequest;
 import tourAgency.tour_agency.model.dto.user.UserRegisterRequest;
 import tourAgency.tour_agency.service.booking.BookingService;
 import tourAgency.tour_agency.service.user.UserService;
@@ -32,35 +29,16 @@ public class UserController {
 
     @GetMapping("/login")
     public ModelAndView getLoginPage() {
-        UserLoginRequest userLoginRequest = UserLoginRequest.builder().build();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
-        modelAndView.addObject("userLoginRequest", userLoginRequest);
 
         return modelAndView;
     }
 
-    @PostMapping("/login")
-    public ModelAndView login(@Valid UserLoginRequest userLoginRequest,
-                              BindingResult bindingResult,
-                              HttpSession httpSession,
-                              HttpServletResponse response
-    ) {
-        if (bindingResult.hasErrors()) {
-            ModelAndView modelAndView = new ModelAndView();
-            modelAndView.setViewName("login");
-            return modelAndView;
-        }
-
-        UserDto user = userService.login(userLoginRequest);
-        httpSession.setAttribute("user_id", user.getId());
-
-        return new ModelAndView("redirect:/home");
-    }
-
     @GetMapping("/register")
     public ModelAndView getRegisterPage() {
+
         UserRegisterRequest userRegisterRequest = UserRegisterRequest.builder().build();
 
         ModelAndView modelAndView = new ModelAndView();
@@ -71,35 +49,42 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ModelAndView registerUser(@Valid UserRegisterRequest userRegisterRequest,
+    public ModelAndView registerUser(@Valid @ModelAttribute UserRegisterRequest userRegisterRequest,
                                      BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
+
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("register");
+            modelAndView.addObject("userRegisterRequest", userRegisterRequest);
+
             return modelAndView;
         }
 
-        ModelAndView modelAndView = new ModelAndView();
-
         try {
+
             userService.register(userRegisterRequest);
+
             return new ModelAndView("redirect:/login");
 
         } catch (RuntimeException ex) {
+
+            ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("register");
+            modelAndView.addObject("userRegisterRequest", userRegisterRequest);
             modelAndView.addObject("error", ex.getMessage());
+
             return modelAndView;
         }
     }
 
     @GetMapping("/profile/{id}")
-    public ModelAndView profile(@PathVariable String id) {
+    public ModelAndView profile(@PathVariable UUID id) {
 
-        UserDto user = userService.getById(UUID.fromString(id));
+        UserDto user = userService.getById(id);
+        List<BookingDto> bookings = bookingService.getByUserId(id);
+
         ModelAndView modelAndView = new ModelAndView();
-        List<BookingDto> bookings = bookingService.getByUserId(UUID.fromString(id));
-
         modelAndView.setViewName("profile");
         modelAndView.addObject("user", user);
         modelAndView.addObject("bookings", bookings);
@@ -108,23 +93,15 @@ public class UserController {
     }
 
     @GetMapping("/profile/edit-profile/{id}")
-    public ModelAndView editProfile(@PathVariable String id) {
+    public ModelAndView editProfile(@PathVariable UUID id) {
 
-        UUID userId = UUID.fromString(id);
-
-        UserDto user = userService.getById(userId);
-
-        if (user == null) {
-            return new ModelAndView("redirect:/home?error=user-not-found");
-        }
-
+        UserDto user = userService.getById(id);
         EditUserRequest editUserRequest = UserMapper.toEditUserRequest(user);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("edit-profile");
         modelAndView.addObject("user", user);
         modelAndView.addObject("editUserRequest", editUserRequest);
-
 
         return modelAndView;
     }
@@ -135,10 +112,14 @@ public class UserController {
                                       BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            ModelAndView modelAndView = new ModelAndView("edit-profile");
+
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("edit-profile");
 
             UserDto user = userService.getById(UUID.fromString(id));
+
             modelAndView.addObject("user", user);
+            modelAndView.addObject("editUserRequest", editUserRequest);
 
             return modelAndView;
         }

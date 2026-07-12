@@ -24,7 +24,9 @@
 
     <div class="profile-menu">
         <a th:href="@{/profile/{id}(id=${user.id})}">Profile</a>
-        <a href="/logout">Logout</a>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
     </div>
 </header>
 

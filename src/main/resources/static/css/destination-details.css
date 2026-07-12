@@ -277,3 +277,17 @@ body {
     color: #555;
     line-height: 1.6;
 }
+
+.logout-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.3s;
+}
+
+.logout-btn:hover {
+    color: #ffb3c6;
+}

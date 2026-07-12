@@ -198,3 +198,17 @@ body {
     font-size: 13px;
     margin-top: 5px;
 }
+
+.logout-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.3s;
+}
+
+.logout-btn:hover {
+    color: #ffb3c6;
+}

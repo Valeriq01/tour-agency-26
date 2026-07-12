@@ -1,11 +1,12 @@
 package tourAgency.tour_agency.web;
 
-import jakarta.servlet.http.HttpSession;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 import tourAgency.tour_agency.model.dto.destination.DestinationDto;
 import tourAgency.tour_agency.model.dto.user.UserDto;
+import tourAgency.tour_agency.security.ApplicationUserDetails;
 import tourAgency.tour_agency.service.destination.DestinationService;
 import tourAgency.tour_agency.service.user.UserService;
 
@@ -18,7 +19,8 @@ public class IndexController {
     private final UserService userService;
     private final DestinationService destinationService;
 
-    public IndexController(UserService userService, DestinationService destinationService) {
+    public IndexController(UserService userService,
+                           DestinationService destinationService) {
         this.userService = userService;
         this.destinationService = destinationService;
     }
@@ -29,13 +31,12 @@ public class IndexController {
     }
 
     @GetMapping("/home")
-    public ModelAndView getHomePage(HttpSession session) {
+    public ModelAndView getHomePage(Authentication authentication) {
 
-        UUID userId = (UUID) session.getAttribute("user_id");
+        ApplicationUserDetails userDetails =
+                (ApplicationUserDetails) authentication.getPrincipal();
 
-        if (userId == null) {
-            return new ModelAndView("redirect:/login");
-        }
+        UUID userId = userDetails.getUser().getId();
 
         UserDto user = userService.getById(userId);
 
@@ -45,15 +46,11 @@ public class IndexController {
                         .limit(3)
                         .toList();
 
-        return new ModelAndView("home")
-                .addObject("user", user)
-                .addObject("popularDestinations", popularDestinations);
-    }
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("home");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("popularDestinations", popularDestinations);
 
-    @GetMapping("/logout")
-    public ModelAndView getLogoutPage(HttpSession httpSession) {
-        httpSession.invalidate();
-        return new ModelAndView("redirect:/");
+        return modelAndView;
     }
 }
-
