@@ -1,5 +1,7 @@
 package tourAgency.tour_agency.web.booking;
 import org.springframework.security.core.Authentication;
+import tourAgency.tour_agency.exception.booking.BookingNotFoundException;
+import tourAgency.tour_agency.model.entity.user.UserRole;
 import tourAgency.tour_agency.security.ApplicationUserDetails;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -117,7 +119,7 @@ public class BookingController {
 
         List<BookingDto> bookings;
 
-        if (user.getRole().name().equals("ADMIN")) {
+        if (user.getRole() == UserRole.ADMIN) {
             bookings = bookingService.getAllBookings();
         } else {
             bookings = bookingService.getByUserId(userId);
@@ -139,7 +141,7 @@ public class BookingController {
 
         UserDto user = userService.getById(userId);
 
-        if (!user.getRole().name().equals("ADMIN")) {
+        if (user.getRole() != UserRole.ADMIN) {
             model.setViewName("redirect:/my-bookings?error=no-permission");
             return model;
         }
@@ -159,7 +161,7 @@ public class BookingController {
 
         UserDto user = userService.getById(userId);
 
-        if (!user.getRole().name().equals("ADMIN")) {
+        if (user.getRole() != UserRole.ADMIN) {
             model.setViewName("redirect:/my-bookings?error=no-permission");
             return model;
         }
@@ -214,6 +216,11 @@ public class BookingController {
 
         BookingDto booking = bookingService.getById(id);
 
+        if (!booking.getUserId().equals(userId)
+                && user.getRole() != UserRole.ADMIN) {
+            throw new BookingNotFoundException("Booking not found.");
+        }
+
         model.setViewName("edit-booking");
         model.addObject("user", user);
         model.addObject("bookingEditDto", BookingMapper.toEditDto(booking));
@@ -232,6 +239,15 @@ public class BookingController {
         ModelAndView model = new ModelAndView();
 
         UUID userId = getCurrentUserId(authentication);
+
+        UserDto user = userService.getById(userId);
+
+        BookingDto booking = bookingService.getById(id);
+
+        if (!booking.getUserId().equals(userId)
+                && user.getRole() != UserRole.ADMIN) {
+            throw new BookingNotFoundException("Booking not found.");
+        }
 
         if (bookingEditDto.getStartDate() != null &&
                 bookingEditDto.getEndDate() != null) {
