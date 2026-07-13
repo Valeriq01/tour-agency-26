@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/error.css">
+
+    <title>Error</title>
+</head>
+
+<body>
+
+<main class="error-page">
+
+    <div class="error-card">
+
+        <h1>Oops!</h1>
+
+        <h3>Something went wrong</h3>
+
+        <p th:text="${message}"></p>
+
+        <a href="/home" class="home-btn">
+            Back to Home
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+</html>

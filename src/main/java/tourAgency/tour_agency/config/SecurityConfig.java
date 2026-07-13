@@ -22,8 +22,7 @@ public class SecurityConfig {
                                 "/login",
                                 "/register",
                                 "/css/**",
-                                "/js/**",
-                                "/images/**"
+                                "/image/**"
                         ).permitAll()
                         .requestMatchers("/admin/**")
                         .hasRole("ADMIN")
@@ -38,7 +37,7 @@ public class SecurityConfig {
                 )
 
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/")
                         .permitAll()
                 );
 
