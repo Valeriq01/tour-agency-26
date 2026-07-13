@@ -2,6 +2,7 @@ package tourAgency.tour_agency.service.destination;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import tourAgency.tour_agency.exception.destination.DestinationNotFoundException;
 import tourAgency.tour_agency.mapper.destination.DestinationMapper;
 import tourAgency.tour_agency.model.dto.destination.DestinationDto;
 import tourAgency.tour_agency.model.entity.destination.Destination;
@@ -28,7 +29,7 @@ public class DestinationService {
     public DestinationDto getById(UUID id) {
         return DestinationMapper.toDto(
                 destinationRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Destination not found"))
+                        .orElseThrow(() -> new DestinationNotFoundException("Destination not found"))
         );
     }
 

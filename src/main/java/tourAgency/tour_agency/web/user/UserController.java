@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tourAgency.tour_agency.exception.user.EmailAlreadyExistsException;
+import tourAgency.tour_agency.exception.user.UsernameAlreadyExistsException;
 import tourAgency.tour_agency.mapper.user.UserMapper;
 import tourAgency.tour_agency.model.dto.booking.BookingDto;
 import tourAgency.tour_agency.model.dto.user.EditUserRequest;
@@ -62,12 +64,10 @@ public class UserController {
         }
 
         try {
-
             userService.register(userRegisterRequest);
-
             return new ModelAndView("redirect:/login");
 
-        } catch (RuntimeException ex) {
+        } catch (UsernameAlreadyExistsException | EmailAlreadyExistsException ex) {
 
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("register");

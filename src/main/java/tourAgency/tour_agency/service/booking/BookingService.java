@@ -2,6 +2,9 @@ package tourAgency.tour_agency.service.booking;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tourAgency.tour_agency.exception.booking.BookingNotFoundException;
+import tourAgency.tour_agency.exception.destination.DestinationNotFoundException;
+import tourAgency.tour_agency.exception.user.UserNotFoundException;
 import tourAgency.tour_agency.mapper.booking.BookingMapper;
 import tourAgency.tour_agency.model.dto.booking.BookingDto;
 import tourAgency.tour_agency.model.dto.booking.BookingEditDto;
@@ -42,10 +45,10 @@ public class BookingService {
     public void createBooking(BookingRequestDto bookingDto, UUID userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow();
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         Destination destination = destinationRepository.findById(bookingDto.getDestinationId())
-                .orElseThrow();
+                .orElseThrow(() -> new DestinationNotFoundException("Destination not found."));
 
         int persons;
 
@@ -69,7 +72,7 @@ public class BookingService {
     public void updateStatus(UUID id, BookingStatus status) {
 
         Booking booking = bookingRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
 
         booking.setStatus(status);
         bookingRepository.save(booking);
@@ -85,7 +88,7 @@ public class BookingService {
     public BookingDto getById(UUID id) {
 
         Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
 
         return BookingMapper.toDto(booking);
     }
@@ -93,7 +96,7 @@ public class BookingService {
     public BookingDto editBooking(UUID id, BookingEditDto dto) {
 
         Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
 
         BookingMapper.toEntity(dto, booking);
 

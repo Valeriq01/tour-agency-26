@@ -4,15 +4,16 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import tourAgency.tour_agency.exception.user.EmailAlreadyExistsException;
+import tourAgency.tour_agency.exception.user.UserNotFoundException;
+import tourAgency.tour_agency.exception.user.UsernameAlreadyExistsException;
 import tourAgency.tour_agency.mapper.user.UserMapper;
 import tourAgency.tour_agency.model.dto.user.EditUserRequest;
 import tourAgency.tour_agency.model.dto.user.UserDto;
-import tourAgency.tour_agency.model.dto.user.UserLoginRequest;
 import tourAgency.tour_agency.model.dto.user.UserRegisterRequest;
 import tourAgency.tour_agency.model.entity.user.User;
 import tourAgency.tour_agency.repository.user.UserRepository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,23 +29,14 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDto login(UserLoginRequest userLoginRequest) {
-        Optional<User> optionalUser = userRepository.findByUsername(userLoginRequest.getUsername());
-
-        if (optionalUser.isEmpty() ||
-                !passwordEncoder.matches(userLoginRequest.getPassword(), optionalUser.get().getPassword())
-        ) {
-
-            throw new RuntimeException("Username or password mismatch!");
-        }
-
-        return UserMapper.toUserDto(optionalUser.get());
-    }
-
     public UserDto register(UserRegisterRequest request) {
 
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
+            throw new UsernameAlreadyExistsException("Username already exists");
+        }
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException("Email already exists.");
         }
 
         User user = UserMapper.toUserEntity(request);
@@ -57,14 +49,14 @@ public class UserService {
     public UserDto getById(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("User with id [%s] does not exist.".formatted(id)));
+                        () -> new UserNotFoundException("User with id [%s] does not exist.".formatted(id)));
         return UserMapper.toUserDto(user);
     }
 
     public UserDto update(String id, EditUserRequest editUserRequest) {
         User entity = userRepository.findById(UUID.fromString(id))
                 .orElseThrow(
-                        () -> new RuntimeException("User with id [%s] does not exist.".formatted(id)));
+                        () -> new UserNotFoundException("User with id [%s] does not exist.".formatted(id)));
 
         entity.setUsername(editUserRequest.getUsername());
         entity.setFirstName(editUserRequest.getFirstName());
