@@ -22,6 +22,10 @@
         <a href="/home" class="active">Home</a>
         <a href="/destinations">Destinations</a>
         <a href="/my-bookings">My Bookings</a>
+        <a th:if="${user.role.name() == 'ADMIN'}"
+           th:href="@{/admin/users}">
+            Manage Users
+        </a>
     </nav>
 
     <div class="profile-menu">
