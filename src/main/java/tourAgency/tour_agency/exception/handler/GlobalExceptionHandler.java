@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import tourAgency.tour_agency.exception.booking.BookingNotFoundException;
 import tourAgency.tour_agency.exception.destination.DestinationNotFoundException;
+import tourAgency.tour_agency.exception.user.CannotChangeOwnRoleException;
 import tourAgency.tour_agency.exception.user.EmailAlreadyExistsException;
 import tourAgency.tour_agency.exception.user.UserNotFoundException;
 import tourAgency.tour_agency.exception.user.UsernameAlreadyExistsException;
@@ -47,6 +48,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public String handleEmailAlreadyExists(EmailAlreadyExistsException ex,
                                            Model model) {
+
+        model.addAttribute("message", ex.getMessage());
+        return "error";
+    }
+
+    @ExceptionHandler(CannotChangeOwnRoleException.class)
+    public String handleCannotChangeOwnRole(CannotChangeOwnRoleException ex,
+                                            Model model) {
 
         model.addAttribute("message", ex.getMessage());
         return "error";
