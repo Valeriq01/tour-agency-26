@@ -50,16 +50,9 @@ public class BookingService {
         Destination destination = destinationRepository.findById(bookingDto.getDestinationId())
                 .orElseThrow(() -> new DestinationNotFoundException("Destination not found."));
 
-        int persons;
-
-        if (bookingDto.getPersons() != null) {
-            persons = bookingDto.getPersons();
-        } else {
-            persons = 1;
-        }
-
-        BigDecimal totalPrice =
-                destination.getPrice().multiply(BigDecimal.valueOf(persons));
+        BigDecimal totalPrice = calculateTotalPrice(
+                        bookingDto.getDestinationId(),
+                        bookingDto.getPersons());
 
         Booking booking = BookingMapper.toEntity(bookingDto, user, destination);
 
@@ -67,6 +60,17 @@ public class BookingService {
         booking.setStatus(BookingStatus.PENDING);
 
         bookingRepository.save(booking);
+    }
+
+    public BigDecimal calculateTotalPrice(UUID destinationId, Integer persons) {
+
+        Destination destination = destinationRepository.findById(destinationId)
+                .orElseThrow(() -> new DestinationNotFoundException("Destination not found."));
+
+        int totalPersons = persons != null ? persons : 1;
+
+        return destination.getPrice()
+                .multiply(BigDecimal.valueOf(totalPersons));
     }
 
     public void updateStatus(UUID id, BookingStatus status) {

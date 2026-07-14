@@ -64,8 +64,10 @@
                th:field="*{persons}"
                min="1">
 
-        <p class="error" th:if="${#fields.hasErrors('persons')}"
-           th:errors="*{persons}"></p>
+        <p class="error"
+           th:if="${#fields.hasErrors('persons')}"
+           th:errors="*{persons}">
+        </p>
 
         <button type="submit"
                 formaction="/booking/preview"
@@ -82,21 +84,27 @@
         <input type="date"
                th:field="*{startDate}">
 
-        <p class="error" th:if="${#fields.hasErrors('startDate')}"
-           th:errors="*{startDate}"></p>
+        <p class="error"
+           th:if="${#fields.hasErrors('startDateValid')}"
+           th:errors="*{startDateValid}">
+        </p>
 
         <label>End Date</label>
         <input type="date"
                th:field="*{endDate}">
 
-        <p class="error" th:if="${#fields.hasErrors('endDate')}"
-           th:errors="*{endDate}"></p>
+        <p class="error"
+           th:if="${#fields.hasErrors('endDateValid')}"
+           th:errors="*{endDateValid}">
+        </p>
 
         <label>Notes (optional)</label>
         <textarea th:field="*{notes}"
                   placeholder="Any special requests..."></textarea>
 
-        <button type="submit">Confirm Booking</button>
+        <button type="submit">
+            Confirm Booking
+        </button>
 
     </form>
 

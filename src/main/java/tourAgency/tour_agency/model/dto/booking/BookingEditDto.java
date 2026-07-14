@@ -1,5 +1,6 @@
 package tourAgency.tour_agency.model.dto.booking;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -26,4 +27,24 @@ public class BookingEditDto {
     private LocalDate endDate;
 
     private String notes;
+
+    @AssertTrue(message = "Start date cannot be before today")
+    public boolean isStartDateValid() {
+
+        if (startDate == null) {
+            return true;
+        }
+
+        return !startDate.isBefore(LocalDate.now());
+    }
+
+    @AssertTrue(message = "End date cannot be before start date")
+    public boolean isEndDateValid() {
+
+        if (startDate == null || endDate == null) {
+            return true;
+        }
+
+        return !endDate.isBefore(startDate);
+    }
 }

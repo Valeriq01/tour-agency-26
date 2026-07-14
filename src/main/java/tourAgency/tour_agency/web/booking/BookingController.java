@@ -67,26 +67,6 @@ public class BookingController {
 
         UUID userId = getCurrentUserId(authentication);
 
-        if (bookingDto.getStartDate() != null &&
-                bookingDto.getEndDate() != null) {
-
-            if (bookingDto.getStartDate().isBefore(LocalDate.now())) {
-                bindingResult.rejectValue(
-                        "startDate",
-                        "date.invalid",
-                        "Start date cannot be before today"
-                );
-            }
-
-            if (bookingDto.getEndDate().isBefore(bookingDto.getStartDate())) {
-                bindingResult.rejectValue(
-                        "endDate",
-                        "date.invalid",
-                        "End date cannot be before start date"
-                );
-            }
-        }
-
         if (bindingResult.hasErrors()) {
 
             modelAndView.setViewName("booking");
@@ -94,7 +74,19 @@ public class BookingController {
             modelAndView.addObject("user", userService.getById(userId));
 
             if (bookingDto.getDestinationId() != null) {
-                modelAndView.addObject("destination", destinationService.getById(bookingDto.getDestinationId()));
+
+                DestinationDto destination =
+                        destinationService.getById(bookingDto.getDestinationId());
+
+                modelAndView.addObject("destination", destination);
+
+                modelAndView.addObject(
+                        "totalPrice",
+                        bookingService.calculateTotalPrice(
+                                bookingDto.getDestinationId(),
+                                bookingDto.getPersons()
+                        )
+                );
             }
 
             modelAndView.addObject("bookingRequestDto", bookingDto);
@@ -190,10 +182,12 @@ public class BookingController {
             persons = 1;
         }
 
-        BigDecimal totalPrice = destination.getPrice()
-                .multiply(BigDecimal.valueOf(persons));
-
         bookingRequestDto.setPersons(persons);
+
+        BigDecimal totalPrice = bookingService.calculateTotalPrice(
+                bookingRequestDto.getDestinationId(),
+                persons
+        );
 
         model.setViewName("booking");
         model.addObject("user", user);
@@ -247,26 +241,6 @@ public class BookingController {
         if (!booking.getUserId().equals(userId)
                 && user.getRole() != UserRole.ADMIN) {
             throw new BookingNotFoundException("Booking not found.");
-        }
-
-        if (bookingEditDto.getStartDate() != null &&
-                bookingEditDto.getEndDate() != null) {
-
-            if (bookingEditDto.getStartDate().isBefore(LocalDate.now())) {
-                bindingResult.rejectValue(
-                        "startDate",
-                        "date.invalid",
-                        "Start date cannot be before today"
-                );
-            }
-
-            if (bookingEditDto.getEndDate().isBefore(bookingEditDto.getStartDate())) {
-                bindingResult.rejectValue(
-                        "endDate",
-                        "date.invalid",
-                        "End date cannot be before start date"
-                );
-            }
         }
 
         if (bindingResult.hasErrors()) {
