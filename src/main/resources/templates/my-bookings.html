@@ -91,7 +91,8 @@
                             Edit
                         </a>
 
-                        <div th:if="${user.role.name() == 'ADMIN'}" class="admin-actions">
+                        <div th:if="${user.role.name() == 'ADMIN' and booking.status.name() == 'PENDING'}"
+                             class="admin-actions">
 
                             <form th:action="@{/booking/approve/{id}(id=${booking.id})}"
                                   method="post">

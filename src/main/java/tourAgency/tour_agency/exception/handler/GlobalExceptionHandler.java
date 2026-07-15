@@ -3,6 +3,7 @@ package tourAgency.tour_agency.exception.handler;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import tourAgency.tour_agency.exception.booking.BookingAlreadyCompletedException;
 import tourAgency.tour_agency.exception.booking.BookingNotFoundException;
 import tourAgency.tour_agency.exception.destination.DestinationNotFoundException;
 import tourAgency.tour_agency.exception.user.CannotChangeOwnRoleException;
@@ -56,6 +57,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CannotChangeOwnRoleException.class)
     public String handleCannotChangeOwnRole(CannotChangeOwnRoleException ex,
                                             Model model) {
+
+        model.addAttribute("message", ex.getMessage());
+        return "error";
+    }
+
+    @ExceptionHandler(BookingAlreadyCompletedException.class)
+    public String handleBookingAlreadyCompleted(BookingAlreadyCompletedException ex,
+                                                Model model) {
 
         model.addAttribute("message", ex.getMessage());
         return "error";

@@ -3,6 +3,7 @@ package tourAgency.tour_agency.service.booking;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tourAgency.tour_agency.exception.booking.BookingAlreadyCompletedException;
 import tourAgency.tour_agency.exception.booking.BookingNotFoundException;
 import tourAgency.tour_agency.exception.destination.DestinationNotFoundException;
 import tourAgency.tour_agency.exception.user.UserNotFoundException;
@@ -19,6 +20,7 @@ import tourAgency.tour_agency.repository.destination.DestinationRepository;
 import tourAgency.tour_agency.repository.user.UserRepository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -85,10 +87,15 @@ public class BookingService {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
 
+        if (booking.getStatus() == BookingStatus.COMPLETED) {
+            throw new BookingAlreadyCompletedException("Completed bookings cannot be modified.");
+        }
+
         booking.setStatus(status);
+
         bookingRepository.save(booking);
 
-        log.info("Booking {} status changed to {}", booking.getId(), status);
+        log.info("Booking {} status changed to {}", id, status);
     }
 
     public List<BookingDto> getAllBookings() {
@@ -118,5 +125,34 @@ public class BookingService {
         log.info("Booking {} updated successfully", booking.getId());
 
         return BookingMapper.toDto(booking);
+    }
+
+    public void completeFinishedBookings() {
+
+        List<Booking> bookings =
+                bookingRepository.findAllByStatusAndEndDateBefore(
+                        BookingStatus.CONFIRMED,
+                        LocalDate.now());
+
+        for (Booking booking : bookings) {
+            booking.setStatus(BookingStatus.COMPLETED);
+        }
+
+        log.info("{} bookings marked as COMPLETED.", bookings.size());
+    }
+
+    public void deleteOldCancelledBookings() {
+
+        LocalDate thresholdDate = LocalDate.now().minusDays(30);
+
+        long deletedCount = bookingRepository.countByStatusAndEndDateBefore(
+                BookingStatus.CANCELLED,
+                thresholdDate);
+
+        bookingRepository.deleteAllByStatusAndEndDateBefore(
+                BookingStatus.CANCELLED,
+                thresholdDate);
+
+        log.info("Deleted {} old cancelled bookings.", deletedCount);
     }
 }

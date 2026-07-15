@@ -248,6 +248,10 @@ body {
     background: #1e88e5c2;
 }
 
+.status.completed {
+    background: #9575cd;
+}
+
 .status.cancelled {
     background: #f44336;
 }
