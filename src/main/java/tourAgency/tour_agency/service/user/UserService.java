@@ -1,6 +1,7 @@
 package tourAgency.tour_agency.service.user;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import tourAgency.tour_agency.repository.user.UserRepository;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional
 public class UserService {
@@ -46,7 +48,11 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        return UserMapper.toUserDto(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+
+        log.info("User {} registered successfully.", savedUser.getUsername());
+
+        return UserMapper.toUserDto(savedUser);
     }
 
     public UserDto getById(UUID id) {
@@ -57,9 +63,10 @@ public class UserService {
     }
 
     public UserDto update(String id, EditUserRequest editUserRequest) {
+
         User entity = userRepository.findById(UUID.fromString(id))
-                .orElseThrow(
-                        () -> new UserNotFoundException("User with id [%s] does not exist.".formatted(id)));
+                .orElseThrow(() -> new UserNotFoundException(
+                                "User with id [%s] does not exist.".formatted(id)));
 
         entity.setUsername(editUserRequest.getUsername());
         entity.setFirstName(editUserRequest.getFirstName());
@@ -67,6 +74,8 @@ public class UserService {
         entity.setEmail(editUserRequest.getEmail());
 
         User updatedUser = userRepository.save(entity);
+
+        log.info("User {} updated profile successfully.", updatedUser.getUsername());
 
         return UserMapper.toUserDto(updatedUser);
     }
@@ -84,6 +93,9 @@ public class UserService {
                            UserRole role) {
 
         if (currentUserId.equals(targetUserId)) {
+
+            log.warn("User {} attempted to change their own role.", currentUserId);
+
             throw new CannotChangeOwnRoleException("You cannot change your own role.");
         }
 
@@ -94,5 +106,7 @@ public class UserService {
         user.setRole(role);
 
         userRepository.save(user);
+
+        log.info("User {} role changed to {}", user.getUsername(), role);
     }
 }

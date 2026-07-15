@@ -1,5 +1,6 @@
 package tourAgency.tour_agency.service.booking;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tourAgency.tour_agency.exception.booking.BookingNotFoundException;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional
 public class BookingService {
@@ -60,6 +62,11 @@ public class BookingService {
         booking.setStatus(BookingStatus.PENDING);
 
         bookingRepository.save(booking);
+
+        log.info("Booking {} created by user {} for destination {}",
+                booking.getId(),
+                userId,
+                destination.getName());
     }
 
     public BigDecimal calculateTotalPrice(UUID destinationId, Integer persons) {
@@ -80,6 +87,8 @@ public class BookingService {
 
         booking.setStatus(status);
         bookingRepository.save(booking);
+
+        log.info("Booking {} status changed to {}", booking.getId(), status);
     }
 
     public List<BookingDto> getAllBookings() {
@@ -105,6 +114,8 @@ public class BookingService {
         BookingMapper.toEntity(dto, booking);
 
         bookingRepository.save(booking);
+
+        log.info("Booking {} updated successfully", booking.getId());
 
         return BookingMapper.toDto(booking);
     }
