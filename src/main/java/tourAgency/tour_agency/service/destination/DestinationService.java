@@ -1,6 +1,7 @@
 package tourAgency.tour_agency.service.destination;
 
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import tourAgency.tour_agency.exception.destination.DestinationNotFoundException;
 import tourAgency.tour_agency.mapper.destination.DestinationMapper;
@@ -21,12 +22,16 @@ public class DestinationService {
         this.destinationRepository = destinationRepository;
     }
 
+    @Cacheable("destinations")
     public List<DestinationDto> getAll() {
         List<Destination> allDestinationsByOrderByNameAsc = destinationRepository.findAllByOrderByNameAsc();
+
         return DestinationMapper.toDtoList(allDestinationsByOrderByNameAsc);
     }
 
+    @Cacheable(value = "destinations", key = "#id")
     public DestinationDto getById(UUID id) {
+
         return DestinationMapper.toDto(
                 destinationRepository.findById(id)
                         .orElseThrow(() -> new DestinationNotFoundException("Destination not found"))
