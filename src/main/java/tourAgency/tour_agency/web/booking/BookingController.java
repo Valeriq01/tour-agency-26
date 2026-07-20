@@ -1,4 +1,5 @@
 package tourAgency.tour_agency.web.booking;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import tourAgency.tour_agency.exception.booking.BookingNotFoundException;
 import tourAgency.tour_agency.model.entity.user.UserRole;
@@ -20,7 +21,6 @@ import tourAgency.tour_agency.service.destination.DestinationService;
 import tourAgency.tour_agency.service.user.UserService;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -124,44 +124,22 @@ public class BookingController {
         return model;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/booking/{id}")
-    public ModelAndView cancel(@PathVariable UUID id, Authentication authentication) {
-
-        ModelAndView model = new ModelAndView();
-
-        UUID userId = getCurrentUserId(authentication);
-
-        UserDto user = userService.getById(userId);
-
-        if (user.getRole() != UserRole.ADMIN) {
-            model.setViewName("redirect:/my-bookings?error=no-permission");
-            return model;
-        }
+    public ModelAndView cancel(@PathVariable UUID id) {
 
         bookingService.updateStatus(id, BookingStatus.CANCELLED);
 
-        model.setViewName("redirect:/my-bookings");
-        return model;
+        return new ModelAndView("redirect:/my-bookings");
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/booking/approve/{id}")
-    public ModelAndView approve(@PathVariable UUID id, Authentication authentication) {
-
-        ModelAndView model = new ModelAndView();
-
-        UUID userId = getCurrentUserId(authentication);
-
-        UserDto user = userService.getById(userId);
-
-        if (user.getRole() != UserRole.ADMIN) {
-            model.setViewName("redirect:/my-bookings?error=no-permission");
-            return model;
-        }
+    public ModelAndView approve(@PathVariable UUID id) {
 
         bookingService.updateStatus(id, BookingStatus.CONFIRMED);
 
-        model.setViewName("redirect:/my-bookings");
-        return model;
+        return new ModelAndView("redirect:/my-bookings");
     }
 
     @PostMapping("/booking/preview")
