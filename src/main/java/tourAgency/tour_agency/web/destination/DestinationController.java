@@ -9,9 +9,11 @@ import tourAgency.tour_agency.model.dto.destination.DestinationDto;
 import tourAgency.tour_agency.model.dto.user.UserDto;
 import tourAgency.tour_agency.security.ApplicationUserDetails;
 import tourAgency.tour_agency.service.destination.DestinationService;
+import tourAgency.tour_agency.service.favorite.FavoriteService;
 import tourAgency.tour_agency.service.user.UserService;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Controller
@@ -19,11 +21,13 @@ public class DestinationController {
 
     private final DestinationService destinationService;
     private final UserService userService;
+    private final FavoriteService favoriteService;
 
     public DestinationController(DestinationService destinationService,
-                                 UserService userService) {
+                                 UserService userService, FavoriteService favoriteService) {
         this.destinationService = destinationService;
         this.userService = userService;
+        this.favoriteService = favoriteService;
     }
 
     @GetMapping("/destinations")
@@ -36,11 +40,13 @@ public class DestinationController {
 
         UserDto user = userService.getById(userId);
         List<DestinationDto> destinationDtoList = destinationService.getAll();
+        Set<UUID> favoriteIds = favoriteService.getFavoriteDestinationIds(userId);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("destinations");
         modelAndView.addObject("user", user);
         modelAndView.addObject("destinations", destinationDtoList);
+        modelAndView.addObject("favoriteIds", favoriteIds);
 
         return modelAndView;
     }

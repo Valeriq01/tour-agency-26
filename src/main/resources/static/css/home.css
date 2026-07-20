@@ -307,3 +307,53 @@ body {
 .logout-btn:hover {
     color: #ffb3c6;
 }
+
+.favorite-form {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 20;
+}
+
+.favorite-btn {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.95);
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 15px rgba(0,0,0,.18);
+
+    transition: .25s ease;
+}
+
+.favorite-btn:hover {
+    transform: scale(1.1);
+    background: white;
+}
+
+.favorite-btn i {
+    font-size: 21px;
+    color: #777;
+    transition: .25s;
+}
+
+.favorite-btn.active i {
+    color: #ff4d6d;
+}
+
+.favorite-btn.active:hover {
+    background: #ffe5ea;
+}
+
+.favorite-btn:hover i {
+    transform: scale(1.15);
+}

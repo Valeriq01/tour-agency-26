@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/my-favorites.css">
+
+    <title>My Favorites - Travel Agency</title>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Travel Agency</div>
+
+    <nav class="nav">
+        <a href="/home">Home</a>
+        <a href="/destinations">Destinations</a>
+        <a href="/my-bookings">My Bookings</a>
+        <a href="/favorites" class="active">My Favorites</a>
+
+        <a th:if="${user.role.name() == 'ADMIN'}"
+           th:href="@{/admin/users}">
+            Manage Users
+        </a>
+    </nav>
+
+    <div class="profile-menu">
+        <a th:href="@{/profile}">Profile</a>
+
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit" class="logout-btn">
+                Logout
+            </button>
+        </form>
+    </div>
+</header>
+
+<main>
+
+    <section class="hero" style="height:250px;">
+        <div class="hero-content">
+            <h1>My Favorites</h1>
+            <p>Your saved destinations</p>
+        </div>
+    </section>
+
+    <section class="favorites-section">
+
+        <h2>Favorite Destinations</h2>
+
+        <div th:if="${#lists.isEmpty(favorites)}"
+             class="no-favorites">
+
+            No favorite destinations yet ❤️
+
+        </div>
+
+        <div class="favorites-grid"
+             th:if="${!#lists.isEmpty(favorites)}">
+
+            <div class="favorite-card"
+                 th:each="favorite : ${favorites}">
+
+                <div class="favorite-image">
+
+                    <img th:src="${favorite.destination.imageUrl}">
+
+                </div>
+
+                <div class="favorite-content">
+
+                    <div class="top">
+
+                        <h3 th:text="${favorite.destination.name}"></h3>
+
+                        <span class="price"
+                              th:text="${'€' + favorite.destination.price}">
+                        </span>
+
+                    </div>
+
+                    <p class="country"
+                       th:text="${favorite.destination.country}">
+                    </p>
+
+                    <div class="info">
+
+                        <div>
+                            <strong th:text="${favorite.destination.days}"></strong>
+                            Days
+                        </div>
+
+                        <div>
+                            <strong th:text="${favorite.destination.availableSpots}"></strong>
+                            Spots
+                        </div>
+
+                    </div>
+
+                    <div class="actions">
+
+                        <a class="details"
+                           th:href="@{/destinations/{id}(id=${favorite.destination.id})}">
+                            View
+                        </a>
+
+                        <form th:action="@{/favorites/remove/{id}(id=${favorite.destination.id})}"
+                              method="post">
+
+                            <input type="hidden" name="redirectUrl" value="/favorites">
+
+                            <button class="remove-btn"
+                                    type="submit">
+                                ❤️ Remove
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    © 2026 Travel Explorer. All rights reserved.
+</footer>
+
+</body>
+</html>
+

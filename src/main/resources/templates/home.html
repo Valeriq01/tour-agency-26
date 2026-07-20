@@ -6,6 +6,8 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <link rel="stylesheet" href="/css/home.css">
 
@@ -22,6 +24,7 @@
         <a href="/home" class="active">Home</a>
         <a href="/destinations">Destinations</a>
         <a href="/my-bookings">My Bookings</a>
+        <a th:href="@{/favorites}">My Favorites</a>
         <a th:if="${user.role.name() == 'ADMIN'}"
            th:href="@{/admin/users}">
             Manage Users
@@ -54,11 +57,39 @@
                  th:each="destination : ${popularDestinations}">
 
                 <div class="image-container">
+
                     <img th:src="${destination.imageUrl}" alt="destination">
+
+                    <form th:if="${!favoriteIds.contains(destination.id)}"
+                          th:action="@{/favorites/add/{id}(id=${destination.id})}"
+                          method="post"
+                          class="favorite-form">
+
+                        <input type="hidden" name="redirectUrl" value="/home">
+
+                        <button type="submit" class="favorite-btn">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+
+                    </form>
+
+                    <form th:if="${favoriteIds.contains(destination.id)}"
+                          th:action="@{/favorites/remove/{id}(id=${destination.id})}"
+                          method="post"
+                          class="favorite-form">
+
+                        <input type="hidden" name="redirectUrl" value="/home">
+
+                        <button type="submit" class="favorite-btn active">
+                            <i class="fa-solid fa-heart"></i>
+                        </button>
+
+                    </form>
 
                     <div class="trip-duration">
                         <span th:text="${destination.days + ' Days'}"></span>
                     </div>
+
                 </div>
 
                 <div class="card-content">
