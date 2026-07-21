@@ -42,7 +42,7 @@
 <main class="edit-container">
 
     <form class="edit-card"
-          th:action="@{/profile/{id}(id=${user.id})}"
+          th:action="@{/profile}"
           th:object="${editUserRequest}"
           method="post">
 

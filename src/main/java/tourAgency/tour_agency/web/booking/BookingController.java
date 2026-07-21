@@ -188,6 +188,11 @@ public class BookingController {
 
         BookingDto booking = bookingService.getById(id);
 
+        if (booking.getStatus() == BookingStatus.CANCELLED
+                || booking.getStatus() == BookingStatus.COMPLETED) {
+            throw new BookingNotFoundException("This booking cannot be edited.");
+        }
+
         if (!booking.getUserId().equals(userId)
                 && user.getRole() != UserRole.ADMIN) {
             throw new BookingNotFoundException("Booking not found.");
@@ -215,6 +220,11 @@ public class BookingController {
         UserDto user = userService.getById(userId);
 
         BookingDto booking = bookingService.getById(id);
+
+        if (booking.getStatus() == BookingStatus.CANCELLED
+                || booking.getStatus() == BookingStatus.COMPLETED) {
+            throw new BookingNotFoundException("This booking cannot be edited.");
+        }
 
         if (!booking.getUserId().equals(userId)
                 && user.getRole() != UserRole.ADMIN) {

@@ -87,7 +87,8 @@
                            th:href="@{/destinations/details/{id}(id=${booking.destinationId})}">
                             View</a>
 
-                        <a th:href="@{/booking/edit/{id}(id=${booking.id})}"
+                        <a th:if="${booking.status.name() == 'PENDING' || booking.status.name() == 'CONFIRMED'}"
+                           th:href="@{/booking/edit/{id}(id=${booking.id})}"
                            class="edit-btn">
                             Edit
                         </a>

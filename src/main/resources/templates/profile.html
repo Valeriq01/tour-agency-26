@@ -46,14 +46,16 @@
         <span class="role admin" th:text="${user.getRole()}">Administrator</span>
     </div>
 
-    <a th:href="@{/profile/edit-profile/{id}(id=${user.id})}" class="edit-btn">Edit Profile</a>
+    <a th:href="@{/profile/edit}" class="edit-btn">
+        Edit Profile
+    </a>
 
 </section>
 
 <main class="profile-container">
 
     <form class="card"
-          th:action="@{/profile/{id}(id=${user.id})}"
+          th:action="@{/profile}"
           th:object="${user}"
           method="post">
 
